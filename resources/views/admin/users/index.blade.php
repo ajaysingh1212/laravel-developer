@@ -34,10 +34,67 @@
                                         {{ trans('cruds.user.fields.email') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.user.fields.email_verified_at') }}
+                                        {{ trans('cruds.user.fields.phone') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.approved') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.addhar_number') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.pan_number') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.state') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.city') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.pincode') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_name') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_gst_number') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_pan_number') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_state') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_city') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_pincode') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.seller_addhar_front') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.seller_adhar_back') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.seller_pan_image') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.shop_pan_image') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.gst_file') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.other_document') }}
                                     </th>
                                     <th>
                                         {{ trans('cruds.user.fields.roles') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.user.fields.email_verified_at') }}
                                     </th>
                                     <th>
                                         &nbsp;
@@ -60,12 +117,94 @@
                                             {{ $user->email ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $user->email_verified_at ?? '' }}
+                                            {{ $user->phone ?? '' }}
+                                        </td>
+                                        <td>
+                                            <span style="display:none">{{ $user->approved ?? '' }}</span>
+                                            <input type="checkbox" disabled="disabled" {{ $user->approved ? 'checked' : '' }}>
+                                        </td>
+                                        <td>
+                                            {{ $user->addhar_number ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->pan_number ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->state ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->city ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->pincode ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_name ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_gst_number ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_pan_number ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_state ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_city ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $user->shop_pincode ?? '' }}
+                                        </td>
+                                        <td>
+                                            @if($user->seller_addhar_front)
+                                                <a href="{{ $user->seller_addhar_front->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $user->seller_addhar_front->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->seller_adhar_back)
+                                                <a href="{{ $user->seller_adhar_back->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $user->seller_adhar_back->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->seller_pan_image)
+                                                <a href="{{ $user->seller_pan_image->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $user->seller_pan_image->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->shop_pan_image)
+                                                <a href="{{ $user->shop_pan_image->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $user->shop_pan_image->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->gst_file)
+                                                <a href="{{ $user->gst_file->getUrl() }}" target="_blank">
+                                                    {{ trans('global.view_file') }}
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($user->other_document)
+                                                <a href="{{ $user->other_document->getUrl() }}" target="_blank">
+                                                    {{ trans('global.view_file') }}
+                                                </a>
+                                            @endif
                                         </td>
                                         <td>
                                             @foreach($user->roles as $key => $item)
                                                 <span class="label label-info label-many">{{ $item->title }}</span>
                                             @endforeach
+                                        </td>
+                                        <td>
+                                            {{ $user->email_verified_at ?? '' }}
                                         </td>
                                         <td>
                                             @can('user_show')

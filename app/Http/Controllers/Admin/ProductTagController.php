@@ -17,7 +17,7 @@ class ProductTagController extends Controller
     {
         abort_if(Gate::denies('product_tag_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $productTags = ProductTag::all();
+        $productTags = ProductTag::with(['created_by'])->get();
 
         return view('admin.productTags.index', compact('productTags'));
     }
@@ -40,6 +40,8 @@ class ProductTagController extends Controller
     {
         abort_if(Gate::denies('product_tag_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $productTag->load('created_by');
+
         return view('admin.productTags.edit', compact('productTag'));
     }
 
@@ -53,6 +55,8 @@ class ProductTagController extends Controller
     public function show(ProductTag $productTag)
     {
         abort_if(Gate::denies('product_tag_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $productTag->load('created_by');
 
         return view('admin.productTags.show', compact('productTag'));
     }

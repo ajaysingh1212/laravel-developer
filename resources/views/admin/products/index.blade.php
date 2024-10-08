@@ -1,15 +1,7 @@
 @extends('layouts.admin')
 @section('content')
 <div class="content">
-    @can('product_create')
-        <div style="margin-bottom: 10px;" class="row">
-            <div class="col-lg-12">
-                <a class="btn btn-success" href="{{ route('admin.products.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.product.title_singular') }}
-                </a>
-            </div>
-        </div>
-    @endcan
+
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
@@ -31,28 +23,37 @@
                                         {{ trans('cruds.product.fields.name') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.product.fields.description') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.product.fields.price') }}
-                                    </th>
-                                    <th>
                                         {{ trans('cruds.product.fields.category') }}
                                     </th>
                                     <th>
                                         {{ trans('cruds.product.fields.tag') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.product.fields.brand') }}
+                                        {{ trans('cruds.product.fields.product_color') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.product.fields.quantity') }}
+                                        {{ trans('cruds.product.fields.select_brand') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.product.fields.status') }}
+                                        {{ trans('cruds.product.fields.users') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.product.fields.price') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.product.fields.discount') }}
                                     </th>
                                     <th>
                                         {{ trans('cruds.product.fields.photo') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.product.fields.product_image_2') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.product.fields.product_image_3') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.product.fields.status') }}
                                     </th>
                                     <th>
                                         &nbsp;
@@ -72,12 +73,6 @@
                                             {{ $product->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $product->description ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $product->price ?? '' }}
-                                        </td>
-                                        <td>
                                             @foreach($product->categories as $key => $item)
                                                 <span class="label label-info label-many">{{ $item->name }}</span>
                                             @endforeach
@@ -88,22 +83,49 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            @foreach($product->brands as $key => $item)
+                                            @foreach($product->product_colors as $key => $item)
+                                                <span class="label label-info label-many">{{ $item->add_color }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach($product->select_brands as $key => $item)
                                                 <span class="label label-info label-many">{{ $item->title }}</span>
                                             @endforeach
                                         </td>
                                         <td>
-                                            {{ $product->quantity ?? '' }}
+                                            @foreach($product->users as $key => $item)
+                                                <span class="label label-info label-many">{{ $item->name }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            {{ $product->price ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $product->discount ?? '' }}
+                                        </td>
+                                        <td>
+                                            @foreach($product->photo as $key => $media)
+                                                <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $media->getUrl('thumb') }}">
+                                                </a>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @if($product->product_image_2)
+                                                <a href="{{ $product->product_image_2->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $product->product_image_2->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($product->product_image_3)
+                                                <a href="{{ $product->product_image_3->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $product->product_image_3->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ App\Models\Product::STATUS_SELECT[$product->status] ?? '' }}
-                                        </td>
-                                        <td>
-                                            @if($product->photo)
-                                                <a href="{{ $product->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                                    <img src="{{ $product->photo->getUrl('thumb') }}">
-                                                </a>
-                                            @endif
                                         </td>
                                         <td>
                                             @can('product_show')

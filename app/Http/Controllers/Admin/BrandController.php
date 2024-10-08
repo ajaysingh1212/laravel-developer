@@ -17,7 +17,7 @@ class BrandController extends Controller
     {
         abort_if(Gate::denies('brand_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $brands = Brand::all();
+        $brands = Brand::with(['created_by'])->get();
 
         return view('admin.brands.index', compact('brands'));
     }
@@ -40,6 +40,8 @@ class BrandController extends Controller
     {
         abort_if(Gate::denies('brand_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $brand->load('created_by');
+
         return view('admin.brands.edit', compact('brand'));
     }
 
@@ -54,7 +56,7 @@ class BrandController extends Controller
     {
         abort_if(Gate::denies('brand_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $brand->load('brandProducts');
+        $brand->load('created_by');
 
         return view('admin.brands.show', compact('brand'));
     }

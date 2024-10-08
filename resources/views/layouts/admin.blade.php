@@ -60,6 +60,44 @@
                     </div>
                 @endif
 
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-bell-o"></i>
+                                @php($alertsCount = \Auth::user()->userUserAlerts()->where('read', false)->count())
+                                    @if($alertsCount > 0)
+                                        <span class="label label-warning">
+                                            {{ $alertsCount }}
+                                        </span>
+                                    @endif
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="slimScrollDiv" style="position: relative;">
+                                        <ul class="menu">
+                                            @if(count($alerts = \Auth::user()->userUserAlerts()->withPivot('read')->limit(10)->orderBy('created_at', 'ASC')->get()->reverse()) > 0)
+                                                @foreach($alerts as $alert)
+                                                    <li>
+                                                        <a href="{{ $alert->alert_link ? $alert->alert_link : "#" }}" target="_blank" rel="noopener noreferrer">
+                                                            @if($alert->pivot->read === 0) <strong> @endif
+                                                                {{ $alert->alert_text }}
+                                                                @if($alert->pivot->read === 0) </strong> @endif
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            @else
+                                                <li style="text-align:center;">
+                                                    {{ trans('global.no_alerts') }}
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
 
             </nav>
         </header>
@@ -130,7 +168,10 @@
   let selectNoneButtonTrans = '{{ trans('global.deselect_all') }}'
 
   let languages = {
-    'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json'
+    'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json',
+        'bn': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Bangla.json',
+        'hi': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Hindi.json',
+        'ta': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Tamil.json'
   };
 
   $.extend(true, $.fn.dataTable.Buttons.defaults.dom.button, { className: 'btn' })
@@ -229,6 +270,87 @@
   });
 
   $.fn.dataTable.ext.classes.sPageButton = '';
+});
+
+    </script>
+    <script>
+        $(document).ready(function () {
+    $(".notifications-menu").on('click', function () {
+        if (!$(this).hasClass('open')) {
+            $('.notifications-menu .label-warning').hide();
+            $.get('/admin/user-alerts/read');
+        }
+    });
+});
+
+    </script>
+    <script>
+        $(document).ready(function() {
+    $('.searchable-field').select2({
+        minimumInputLength: 3,
+        ajax: {
+            url: '{{ route("admin.globalSearch") }}',
+            dataType: 'json',
+            type: 'GET',
+            delay: 200,
+            data: function (term) {
+                return {
+                    search: term
+                };
+            },
+            results: function (data) {
+                return {
+                    data
+                };
+            }
+        },
+        escapeMarkup: function (markup) { return markup; },
+        templateResult: formatItem,
+        templateSelection: formatItemSelection,
+        placeholder : '{{ trans('global.search') }}...',
+        language: {
+            inputTooShort: function(args) {
+                var remainingChars = args.minimum - args.input.length;
+                var translation = '{{ trans('global.search_input_too_short') }}';
+
+                return translation.replace(':count', remainingChars);
+            },
+            errorLoading: function() {
+                return '{{ trans('global.results_could_not_be_loaded') }}';
+            },
+            searching: function() {
+                return '{{ trans('global.searching') }}';
+            },
+            noResults: function() {
+                return '{{ trans('global.no_results') }}';
+            },
+        }
+
+    });
+    function formatItem (item) {
+        if (item.loading) {
+            return '{{ trans('global.searching') }}...';
+        }
+        var markup = "<div class='searchable-link' href='" + item.url + "'>";
+        markup += "<div class='searchable-title'>" + item.model + "</div>";
+        $.each(item.fields, function(key, field) {
+            markup += "<div class='searchable-fields'>" + item.fields_formated[field] + " : " + item[field] + "</div>";
+        });
+        markup += "</div>";
+
+        return markup;
+    }
+
+    function formatItemSelection (item) {
+        if (!item.model) {
+            return '{{ trans('global.search') }}...';
+        }
+        return item.model;
+    }
+    $(document).delegate('.searchable-link', 'click', function() {
+        var url = $(this).attr('href');
+        window.location = url;
+    });
 });
 
     </script>
