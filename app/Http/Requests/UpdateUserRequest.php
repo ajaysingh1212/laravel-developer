@@ -25,6 +25,60 @@ class UpdateUserRequest extends FormRequest
                 'required',
                 'unique:users,email,' . request()->route('user')->id,
             ],
+            'phone' => [
+                'string',
+                'required',
+            ],
+            'addhar_number' => [
+                'string',
+                'required',
+            ],
+            'pan_number' => [
+                'string',
+                'required',
+            ],
+            'state' => [
+                'string',
+                'required',
+            ],
+            'city' => [
+                'string',
+                'required',
+            ],
+            'pincode' => [
+                'string',
+                'required',
+            ],
+            'present_address' => [
+                'required',
+            ],
+            'shop_name' => [
+                'string',
+                'required',
+            ],
+            'shop_gst_number' => [
+                'string',
+                'required',
+            ],
+            'shop_pan_number' => [
+                'string',
+                'nullable',
+            ],
+            'shop_state' => [
+                'string',
+                'required',
+            ],
+            'shop_city' => [
+                'string',
+                'required',
+            ],
+            'shop_pincode' => [
+                'string',
+                'required',
+            ],
+            'seller_adhar_back' => [
+                'required',
+            ],
             'roles.*' => [
                 'integer',
             ],

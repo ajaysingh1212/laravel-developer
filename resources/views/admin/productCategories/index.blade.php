@@ -34,6 +34,9 @@
                                         {{ trans('cruds.productCategory.fields.description') }}
                                     </th>
                                     <th>
+                                        {{ trans('cruds.productCategory.fields.photo') }}
+                                    </th>
+                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -52,6 +55,13 @@
                                         </td>
                                         <td>
                                             {{ $productCategory->description ?? '' }}
+                                        </td>
+                                        <td>
+                                            @if($productCategory->photo)
+                                                <a href="{{ $productCategory->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $productCategory->photo->getUrl('thumb') }}">
+                                                </a>
+                                            @endif
                                         </td>
                                         <td>
                                             @can('product_category_show')

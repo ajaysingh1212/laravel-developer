@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\MultiTenantModelTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, MultiTenantModelTrait, HasFactory;
 
     public $table = 'brands';
 
@@ -30,6 +31,7 @@ class Brand extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+        'created_by_id',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
@@ -37,8 +39,8 @@ class Brand extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function brandProducts()
+    public function created_by()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 }

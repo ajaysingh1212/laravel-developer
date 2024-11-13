@@ -21,9 +21,6 @@ class UpdateProductRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'price' => [
-                'required',
-            ],
             'categories.*' => [
                 'integer',
             ],
@@ -36,24 +33,37 @@ class UpdateProductRequest extends FormRequest
             'tags' => [
                 'array',
             ],
-            'brands.*' => [
+            'product_colors.*' => [
                 'integer',
             ],
-            'brands' => [
+            'product_colors' => [
                 'required',
                 'array',
             ],
-            'summary' => [
-                'required',
-            ],
-            'quantity' => [
-                'required',
-                'nullable',
+            'select_brands.*' => [
                 'integer',
-                'min:-2147483648',
-                'max:2147483647',
             ],
-            'status' => [
+            'select_brands' => [
+                'required',
+                'array',
+            ],
+            'users.*' => [
+                'integer',
+            ],
+            'users' => [
+                'required',
+                'array',
+            ],
+            'price' => [
+                'required',
+            ],
+            'photo' => [
+                'array',
+            ],
+            'product_image_2' => [
+                'required',
+            ],
+            'product_image_3' => [
                 'required',
             ],
         ];

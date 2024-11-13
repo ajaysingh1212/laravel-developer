@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyProductRequest;
-use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Brand;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductTag;
+use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,39 +25,9 @@ class ProductController extends Controller
     {
         abort_if(Gate::denies('product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $products = Product::with(['categories', 'tags', 'brands', 'media'])->get();
+        $products = Product::with(['categories', 'tags', 'product_colors', 'select_brands', 'users', 'created_by', 'media'])->get();
 
         return view('admin.products.index', compact('products'));
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $categories = ProductCategory::pluck('name', 'id');
-
-        $tags = ProductTag::pluck('name', 'id');
-
-        $brands = Brand::pluck('title', 'id');
-
-        return view('admin.products.create', compact('brands', 'categories', 'tags'));
-    }
-
-    public function store(StoreProductRequest $request)
-    {
-        $product = Product::create($request->all());
-        $product->categories()->sync($request->input('categories', []));
-        $product->tags()->sync($request->input('tags', []));
-        $product->brands()->sync($request->input('brands', []));
-        if ($request->input('photo', false)) {
-            $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
-        }
-
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $product->id]);
-        }
-
-        return redirect()->route('admin.products.index');
     }
 
     public function edit(Product $product)
@@ -67,11 +38,15 @@ class ProductController extends Controller
 
         $tags = ProductTag::pluck('name', 'id');
 
-        $brands = Brand::pluck('title', 'id');
+        $product_colors = Color::pluck('add_color', 'id');
 
-        $product->load('categories', 'tags', 'brands');
+        $select_brands = Brand::pluck('title', 'id');
 
-        return view('admin.products.edit', compact('brands', 'categories', 'product', 'tags'));
+        $users = User::pluck('name', 'id');
+
+        $product->load('categories', 'tags', 'product_colors', 'select_brands', 'users', 'created_by');
+
+        return view('admin.products.edit', compact('categories', 'product', 'product_colors', 'select_brands', 'tags', 'users'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -79,16 +54,43 @@ class ProductController extends Controller
         $product->update($request->all());
         $product->categories()->sync($request->input('categories', []));
         $product->tags()->sync($request->input('tags', []));
-        $product->brands()->sync($request->input('brands', []));
-        if ($request->input('photo', false)) {
-            if (! $product->photo || $request->input('photo') !== $product->photo->file_name) {
-                if ($product->photo) {
-                    $product->photo->delete();
+        $product->product_colors()->sync($request->input('product_colors', []));
+        $product->select_brands()->sync($request->input('select_brands', []));
+        $product->users()->sync($request->input('users', []));
+        if (count($product->photo) > 0) {
+            foreach ($product->photo as $media) {
+                if (! in_array($media->file_name, $request->input('photo', []))) {
+                    $media->delete();
                 }
-                $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
             }
-        } elseif ($product->photo) {
-            $product->photo->delete();
+        }
+        $media = $product->photo->pluck('file_name')->toArray();
+        foreach ($request->input('photo', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $product->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photo');
+            }
+        }
+
+        if ($request->input('product_image_2', false)) {
+            if (! $product->product_image_2 || $request->input('product_image_2') !== $product->product_image_2->file_name) {
+                if ($product->product_image_2) {
+                    $product->product_image_2->delete();
+                }
+                $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('product_image_2'))))->toMediaCollection('product_image_2');
+            }
+        } elseif ($product->product_image_2) {
+            $product->product_image_2->delete();
+        }
+
+        if ($request->input('product_image_3', false)) {
+            if (! $product->product_image_3 || $request->input('product_image_3') !== $product->product_image_3->file_name) {
+                if ($product->product_image_3) {
+                    $product->product_image_3->delete();
+                }
+                $product->addMedia(storage_path('tmp/uploads/' . basename($request->input('product_image_3'))))->toMediaCollection('product_image_3');
+            }
+        } elseif ($product->product_image_3) {
+            $product->product_image_3->delete();
         }
 
         return redirect()->route('admin.products.index');
@@ -98,7 +100,7 @@ class ProductController extends Controller
     {
         abort_if(Gate::denies('product_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $product->load('categories', 'tags', 'brands');
+        $product->load('categories', 'tags', 'product_colors', 'select_brands', 'users', 'created_by', 'selectProductCoupons');
 
         return view('admin.products.show', compact('product'));
     }

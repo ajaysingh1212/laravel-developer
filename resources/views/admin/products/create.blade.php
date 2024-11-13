@@ -19,22 +19,6 @@
                             @endif
                             <span class="help-block">{{ trans('cruds.product.fields.name_helper') }}</span>
                         </div>
-                        <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                            <label for="description">{{ trans('cruds.product.fields.description') }}</label>
-                            <textarea class="form-control" name="description" id="description">{{ old('description') }}</textarea>
-                            @if($errors->has('description'))
-                                <span class="help-block" role="alert">{{ $errors->first('description') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.description_helper') }}</span>
-                        </div>
-                        <div class="form-group {{ $errors->has('price') ? 'has-error' : '' }}">
-                            <label class="required" for="price">{{ trans('cruds.product.fields.price') }}</label>
-                            <input class="form-control" type="number" name="price" id="price" value="{{ old('price', '') }}" step="0.01" required>
-                            @if($errors->has('price'))
-                                <span class="help-block" role="alert">{{ $errors->first('price') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.price_helper') }}</span>
-                        </div>
                         <div class="form-group {{ $errors->has('categories') ? 'has-error' : '' }}">
                             <label for="categories">{{ trans('cruds.product.fields.category') }}</label>
                             <div style="padding-bottom: 4px">
@@ -67,50 +51,85 @@
                             @endif
                             <span class="help-block">{{ trans('cruds.product.fields.tag_helper') }}</span>
                         </div>
-                        <div class="form-group {{ $errors->has('brands') ? 'has-error' : '' }}">
-                            <label class="required" for="brands">{{ trans('cruds.product.fields.brand') }}</label>
+                        <div class="form-group {{ $errors->has('product_colors') ? 'has-error' : '' }}">
+                            <label class="required" for="product_colors">{{ trans('cruds.product.fields.product_color') }}</label>
                             <div style="padding-bottom: 4px">
                                 <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
                                 <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
                             </div>
-                            <select class="form-control select2" name="brands[]" id="brands" multiple required>
-                                @foreach($brands as $id => $brand)
-                                    <option value="{{ $id }}" {{ in_array($id, old('brands', [])) ? 'selected' : '' }}>{{ $brand }}</option>
+                            <select class="form-control select2" name="product_colors[]" id="product_colors" multiple required>
+                                @foreach($product_colors as $id => $product_color)
+                                    <option value="{{ $id }}" {{ in_array($id, old('product_colors', [])) ? 'selected' : '' }}>{{ $product_color }}</option>
                                 @endforeach
                             </select>
-                            @if($errors->has('brands'))
-                                <span class="help-block" role="alert">{{ $errors->first('brands') }}</span>
+                            @if($errors->has('product_colors'))
+                                <span class="help-block" role="alert">{{ $errors->first('product_colors') }}</span>
                             @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.brand_helper') }}</span>
+                            <span class="help-block">{{ trans('cruds.product.fields.product_color_helper') }}</span>
                         </div>
-                        <div class="form-group {{ $errors->has('summary') ? 'has-error' : '' }}">
-                            <label for="summary">{{ trans('cruds.product.fields.summary') }}</label>
-                            <textarea class="form-control ckeditor" name="summary" id="summary">{!! old('summary') !!}</textarea>
-                            @if($errors->has('summary'))
-                                <span class="help-block" role="alert">{{ $errors->first('summary') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.summary_helper') }}</span>
-                        </div>
-                        <div class="form-group {{ $errors->has('quantity') ? 'has-error' : '' }}">
-                            <label class="required" for="quantity">{{ trans('cruds.product.fields.quantity') }}</label>
-                            <input class="form-control" type="number" name="quantity" id="quantity" value="{{ old('quantity', '1') }}" step="1" required>
-                            @if($errors->has('quantity'))
-                                <span class="help-block" role="alert">{{ $errors->first('quantity') }}</span>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.quantity_helper') }}</span>
-                        </div>
-                        <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                            <label class="required">{{ trans('cruds.product.fields.status') }}</label>
-                            <select class="form-control" name="status" id="status" required>
-                                <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                                @foreach(App\Models\Product::STATUS_SELECT as $key => $label)
-                                    <option value="{{ $key }}" {{ old('status', 'active') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                        <div class="form-group {{ $errors->has('select_brands') ? 'has-error' : '' }}">
+                            <label class="required" for="select_brands">{{ trans('cruds.product.fields.select_brand') }}</label>
+                            <div style="padding-bottom: 4px">
+                                <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                                <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                            </div>
+                            <select class="form-control select2" name="select_brands[]" id="select_brands" multiple required>
+                                @foreach($select_brands as $id => $select_brand)
+                                    <option value="{{ $id }}" {{ in_array($id, old('select_brands', [])) ? 'selected' : '' }}>{{ $select_brand }}</option>
                                 @endforeach
                             </select>
-                            @if($errors->has('status'))
-                                <span class="help-block" role="alert">{{ $errors->first('status') }}</span>
+                            @if($errors->has('select_brands'))
+                                <span class="help-block" role="alert">{{ $errors->first('select_brands') }}</span>
                             @endif
-                            <span class="help-block">{{ trans('cruds.product.fields.status_helper') }}</span>
+                            <span class="help-block">{{ trans('cruds.product.fields.select_brand_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('users') ? 'has-error' : '' }}">
+                            <label class="required" for="users">{{ trans('cruds.product.fields.users') }}</label>
+                            <div style="padding-bottom: 4px">
+                                <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                                <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                            </div>
+                            <select class="form-control select2" name="users[]" id="users" multiple required>
+                                @foreach($users as $id => $user)
+                                    <option value="{{ $id }}" {{ in_array($id, old('users', [])) ? 'selected' : '' }}>{{ $user }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('users'))
+                                <span class="help-block" role="alert">{{ $errors->first('users') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.users_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('price') ? 'has-error' : '' }}">
+                            <label class="required" for="price">{{ trans('cruds.product.fields.price') }}</label>
+                            <input class="form-control" type="number" name="price" id="price" value="{{ old('price', '') }}" step="0.01" required>
+                            @if($errors->has('price'))
+                                <span class="help-block" role="alert">{{ $errors->first('price') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.price_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('discount') ? 'has-error' : '' }}">
+                            <label for="discount">{{ trans('cruds.product.fields.discount') }}</label>
+                            <input class="form-control" type="number" name="discount" id="discount" value="{{ old('discount', '') }}" step="0.01">
+                            @if($errors->has('discount'))
+                                <span class="help-block" role="alert">{{ $errors->first('discount') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.discount_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
+                            <label for="description">{{ trans('cruds.product.fields.description') }}</label>
+                            <textarea class="form-control ckeditor" name="description" id="description">{!! old('description') !!}</textarea>
+                            @if($errors->has('description'))
+                                <span class="help-block" role="alert">{{ $errors->first('description') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.description_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('long_description') ? 'has-error' : '' }}">
+                            <label for="long_description">{{ trans('cruds.product.fields.long_description') }}</label>
+                            <textarea class="form-control ckeditor" name="long_description" id="long_description">{!! old('long_description') !!}</textarea>
+                            @if($errors->has('long_description'))
+                                <span class="help-block" role="alert">{{ $errors->first('long_description') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.long_description_helper') }}</span>
                         </div>
                         <div class="form-group {{ $errors->has('photo') ? 'has-error' : '' }}">
                             <label for="photo">{{ trans('cruds.product.fields.photo') }}</label>
@@ -120,6 +139,24 @@
                                 <span class="help-block" role="alert">{{ $errors->first('photo') }}</span>
                             @endif
                             <span class="help-block">{{ trans('cruds.product.fields.photo_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('product_image_2') ? 'has-error' : '' }}">
+                            <label class="required" for="product_image_2">{{ trans('cruds.product.fields.product_image_2') }}</label>
+                            <div class="needsclick dropzone" id="product_image_2-dropzone">
+                            </div>
+                            @if($errors->has('product_image_2'))
+                                <span class="help-block" role="alert">{{ $errors->first('product_image_2') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.product_image_2_helper') }}</span>
+                        </div>
+                        <div class="form-group {{ $errors->has('product_image_3') ? 'has-error' : '' }}">
+                            <label class="required" for="product_image_3">{{ trans('cruds.product.fields.product_image_3') }}</label>
+                            <div class="needsclick dropzone" id="product_image_3-dropzone">
+                            </div>
+                            @if($errors->has('product_image_3'))
+                                <span class="help-block" role="alert">{{ $errors->first('product_image_3') }}</span>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.product.fields.product_image_3_helper') }}</span>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-danger" type="submit">
@@ -203,9 +240,70 @@
 </script>
 
 <script>
-    Dropzone.options.photoDropzone = {
+    var uploadedPhotoMap = {}
+Dropzone.options.photoDropzone = {
     url: '{{ route('admin.products.storeMedia') }}',
-    maxFilesize: 2, // MB
+    maxFilesize: 20, // MB
+    acceptedFiles: '.jpeg,.jpg,.png,.gif',
+    addRemoveLinks: true,
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    params: {
+      size: 20,
+      width: 4096,
+      height: 4096
+    },
+    success: function (file, response) {
+      $('form').append('<input type="hidden" name="photo[]" value="' + response.name + '">')
+      uploadedPhotoMap[file.name] = response.name
+    },
+    removedfile: function (file) {
+      console.log(file)
+      file.previewElement.remove()
+      var name = ''
+      if (typeof file.file_name !== 'undefined') {
+        name = file.file_name
+      } else {
+        name = uploadedPhotoMap[file.name]
+      }
+      $('form').find('input[name="photo[]"][value="' + name + '"]').remove()
+    },
+    init: function () {
+@if(isset($product) && $product->photo)
+      var files = {!! json_encode($product->photo) !!}
+          for (var i in files) {
+          var file = files[i]
+          this.options.addedfile.call(this, file)
+          this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
+          file.previewElement.classList.add('dz-complete')
+          $('form').append('<input type="hidden" name="photo[]" value="' + file.file_name + '">')
+        }
+@endif
+    },
+     error: function (file, response) {
+         if ($.type(response) === 'string') {
+             var message = response //dropzone sends it's own error messages in string
+         } else {
+             var message = response.errors.file
+         }
+         file.previewElement.classList.add('dz-error')
+         _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
+         _results = []
+         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+             node = _ref[_i]
+             _results.push(node.textContent = message)
+         }
+
+         return _results
+     }
+}
+
+</script>
+<script>
+    Dropzone.options.productImage2Dropzone = {
+    url: '{{ route('admin.products.storeMedia') }}',
+    maxFilesize: 20, // MB
     acceptedFiles: '.jpeg,.jpg,.png,.gif',
     maxFiles: 1,
     addRemoveLinks: true,
@@ -213,28 +311,83 @@
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
     },
     params: {
-      size: 2,
+      size: 20,
       width: 4096,
       height: 4096
     },
     success: function (file, response) {
-      $('form').find('input[name="photo"]').remove()
-      $('form').append('<input type="hidden" name="photo" value="' + response.name + '">')
+      $('form').find('input[name="product_image_2"]').remove()
+      $('form').append('<input type="hidden" name="product_image_2" value="' + response.name + '">')
     },
     removedfile: function (file) {
       file.previewElement.remove()
       if (file.status !== 'error') {
-        $('form').find('input[name="photo"]').remove()
+        $('form').find('input[name="product_image_2"]').remove()
         this.options.maxFiles = this.options.maxFiles + 1
       }
     },
     init: function () {
-@if(isset($product) && $product->photo)
-      var file = {!! json_encode($product->photo) !!}
+@if(isset($product) && $product->product_image_2)
+      var file = {!! json_encode($product->product_image_2) !!}
           this.options.addedfile.call(this, file)
       this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
       file.previewElement.classList.add('dz-complete')
-      $('form').append('<input type="hidden" name="photo" value="' + file.file_name + '">')
+      $('form').append('<input type="hidden" name="product_image_2" value="' + file.file_name + '">')
+      this.options.maxFiles = this.options.maxFiles - 1
+@endif
+    },
+    error: function (file, response) {
+        if ($.type(response) === 'string') {
+            var message = response //dropzone sends it's own error messages in string
+        } else {
+            var message = response.errors.file
+        }
+        file.previewElement.classList.add('dz-error')
+        _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
+        _results = []
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i]
+            _results.push(node.textContent = message)
+        }
+
+        return _results
+    }
+}
+
+</script>
+<script>
+    Dropzone.options.productImage3Dropzone = {
+    url: '{{ route('admin.products.storeMedia') }}',
+    maxFilesize: 20, // MB
+    acceptedFiles: '.jpeg,.jpg,.png,.gif',
+    maxFiles: 1,
+    addRemoveLinks: true,
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    params: {
+      size: 20,
+      width: 4096,
+      height: 4096
+    },
+    success: function (file, response) {
+      $('form').find('input[name="product_image_3"]').remove()
+      $('form').append('<input type="hidden" name="product_image_3" value="' + response.name + '">')
+    },
+    removedfile: function (file) {
+      file.previewElement.remove()
+      if (file.status !== 'error') {
+        $('form').find('input[name="product_image_3"]').remove()
+        this.options.maxFiles = this.options.maxFiles + 1
+      }
+    },
+    init: function () {
+@if(isset($product) && $product->product_image_3)
+      var file = {!! json_encode($product->product_image_3) !!}
+          this.options.addedfile.call(this, file)
+      this.options.thumbnail.call(this, file, file.preview ?? file.preview_url)
+      file.previewElement.classList.add('dz-complete')
+      $('form').append('<input type="hidden" name="product_image_3" value="' + file.file_name + '">')
       this.options.maxFiles = this.options.maxFiles - 1
 @endif
     },
